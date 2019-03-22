@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+  - name: test lvm action plugin
+    lvm:
+      devices: "/dev/vdb"
+
+      vg:
+          state: "present"
+
+      lv:
+          state: "present"

@@ -105,7 +105,7 @@ def get_existing_vgs(pvs):
         located on given Physical Volumes (PVs) list
     '''
 
-    existing_pvs = blockdev.lvm.pvs()
+    existing_pvs = [pv.pv_name for pv in blockdev.lvm.pvs()]
     existing_vgs = []
     for pv in pvs:
         if pv not in existing_pvs:
@@ -142,7 +142,7 @@ def run_module():
     if not blockdev.ensure_init():
         module.fail_json(msg="Failed to initialize libblockdev")
 
-    existing_pvs = blockdev.lvm.pvs()
+    existing_pvs = [pv.pv_name for pv in blockdev.lvm.pvs()]
 
     vg_name = module.params["name"]
     result["vg_name"] = vg_name
@@ -160,7 +160,7 @@ def run_module():
             # given pvs have to be subset of all existing pvs -
             # alas they are not
             module.fail_json(msg="LVM VG creation requires all "
-                                 "given 'pvs' to exist")
+                    "given 'pvs' to exist")
 
         if vg_name is None:
             # No VG name was given. Use existing VG, if exactly one is present.
